@@ -1,8 +1,7 @@
 package me.memleak.pomorello.activities;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -19,9 +18,9 @@ import me.memleak.pomorello.fragments.TaskFragment;
  */
 public class TasksActivity extends BaseActivity {
 
-    public static void startActivity(Context context) {
-        Intent intent = new Intent(context, TasksActivity.class);
-        context.startActivity(intent);
+    public static void startActivity(Activity activity) {
+        Intent intent = new Intent(activity, TasksActivity.class);
+        activity.startActivity(intent);
     }
 
     public static final int TAB_TODO = 0;
@@ -47,22 +46,17 @@ public class TasksActivity extends BaseActivity {
     private String[] mTabNames;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        mTabNames = new String[TAB_NAMES_RES.length];
-        for (int i = 0; i < mTabNames.length; i++) {
-            mTabNames[i] = getString(TAB_NAMES_RES[i]);
-        }
-    }
-
-    @Override
     protected int getLayoutResID() {
         return R.layout.activity_tasks;
     }
 
     @Override
     protected void setupViews() {
+        mTabNames = new String[TAB_NAMES_RES.length];
+        for (int i = 0; i < mTabNames.length; i++) {
+            mTabNames[i] = getString(TAB_NAMES_RES[i]);
+        }
+
         vpgPages.setAdapter(new PagesAdapter());
 
         tblTabs.setTabsFromPagerAdapter(vpgPages.getAdapter());
