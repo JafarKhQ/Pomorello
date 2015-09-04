@@ -11,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import butterknife.ButterKnife;
+import me.memleak.pomorello.PomorelloApp;
+import me.memleak.pomorello.models.PomorelloUser;
 
 /**
  * Created by jafar_qaddoumi on 9/4/15.
@@ -21,9 +23,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected final String TAG = ((Object) this).getClass().getSimpleName();
     private static final int MENU_RES_NONE = -1;
 
+    protected Context mContext;
     protected ActionBar mActionBar;
-    protected Context mContext = BaseActivity.this;
-    protected BaseActivity mActivity = BaseActivity.this;
+    protected BaseActivity mActivity;
+    protected PomorelloUser mPomorelloUser;
 
     @LayoutRes
     protected abstract int getLayoutResID();
@@ -34,6 +37,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResID());
+
+        mActivity = this;
+        mContext = mActivity.getApplicationContext();
+        mPomorelloUser = PomorelloApp.getPomorelloUser();
 
         try {
             // on activities without actionbar a nullPointerException will be thrown here (ICS)
