@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Pomorello</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <!-- Tasks -->
+    <string name="tasks_tab_todo">To Do</string>
+    <string name="tasks_tab_doing">Doing</string>
+    <string name="tasks_tab_done">Done</string>
+    <!-- Tasks -->
+
 </resources>

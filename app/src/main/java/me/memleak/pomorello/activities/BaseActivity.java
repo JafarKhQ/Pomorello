@@ -28,6 +28,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @LayoutRes
     protected abstract int getLayoutResID();
 
+    protected abstract void setupViews();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         ButterKnife.bind(mActivity);
+        setupViews();
     }
 
     @Override

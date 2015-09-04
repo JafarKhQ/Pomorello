@@ -1,5 +1,7 @@
 package me.memleak.pomorello.fragments;
 
+import android.os.Bundle;
+
 import me.memleak.pomorello.R;
 
 /**
@@ -8,9 +10,15 @@ import me.memleak.pomorello.R;
  * Copyright (c) 2015 memleak.me. All rights reserved.
  */
 public class TaskFragment extends BaseFragment {
+    private static final String EXTRA_TAB_TYPE = "extra_tab_type";
 
-    public static TaskFragment newInstance() {
-        return new TaskFragment();
+    public static TaskFragment newInstance(int type) {
+        Bundle args = new Bundle();
+        args.putInt(EXTRA_TAB_TYPE, type);
+
+        TaskFragment fg = new TaskFragment();
+        fg.setArguments(args);
+        return fg;
     }
 
     @Override
