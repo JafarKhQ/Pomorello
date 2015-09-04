@@ -16,6 +16,12 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void setupViews() {
+        if (mPomorelloUser.isAuthenticated()) {
+            TasksActivity.startActivity(mActivity);
+        } else {
+            AuthenticateTrelloActivity.startActivity(mActivity);
+        }
 
+        mActivity.finish();
     }
 }
