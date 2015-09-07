@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import butterknife.ButterKnife;
+import io.realm.Realm;
 import me.memleak.pomorello.PomorelloApp;
 import me.memleak.pomorello.models.PomorelloUser;
 
@@ -23,6 +24,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected final String TAG = ((Object) this).getClass().getSimpleName();
     private static final int MENU_RES_NONE = -1;
 
+    protected Realm mRealm;
     protected Context mContext;
     protected ActionBar mActionBar;
     protected BaseActivity mActivity;
@@ -39,6 +41,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         setContentView(getLayoutResID());
 
         mActivity = this;
+        mRealm = PomorelloApp.getRealm();
         mContext = mActivity.getApplicationContext();
         mPomorelloUser = PomorelloApp.getPomorelloUser();
 
