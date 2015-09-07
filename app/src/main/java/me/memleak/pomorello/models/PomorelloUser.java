@@ -2,6 +2,7 @@ package me.memleak.pomorello.models;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
@@ -44,12 +45,20 @@ public class PomorelloUser {
 
     @Expose
     private String accessToken;
-
+    @Expose
+    private String accessSecret;
 
     public boolean isAuthenticated() {
         return !TextUtils.isEmpty(accessToken);
     }
 
+    public void setAccessToken(@NonNull String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public void setAccessSecret(@NonNull String accessSecret) {
+        this.accessSecret = accessSecret;
+    }
 
     public void save(Context context) {
         SharedPreferences.Editor editor = context.getApplicationContext().

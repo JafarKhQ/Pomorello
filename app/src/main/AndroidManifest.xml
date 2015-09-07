@@ -20,6 +20,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.TrelloOuthActivity"
+            android:label="@string/title_trello_outh"
+            android:screenOrientation="sensorPortrait" />
         <activity android:name=".activities.AuthenticateTrelloActivity" />
         <activity android:name=".activities.TasksActivity" />
         <activity android:name=".activities.TimerActivity" />

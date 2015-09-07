@@ -10,7 +10,11 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+
+        buildConfigField 'String', 'TRELLO_API_KEY', "\"7b2dbf321c8434ec8a100262c3adc577\""
+        buildConfigField 'String', 'TRELLO_API_SECRET', "\"88735a7d8d8915787e7d8dd27475ba72dc9885de7228f387e08ba8eab7b948c6\""
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -21,11 +25,12 @@ android {
 
 dependencies {
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.0.1'
+
+    compile 'org.scribe:scribe:1.3.7'
+    compile 'com.google.code.gson:gson:2.3'
     compile 'com.android.support:design:23.0.1'
     compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.squareup.picasso:picasso:2.5.2'
     // retrofit 2.0 beta1 is here super fast (ok IO)
     compile 'com.squareup.retrofit:retrofit:1.9.0'
-    compile 'com.google.code.gson:gson:2.3'
+    compile 'com.android.support:appcompat-v7:23.0.1'
 }

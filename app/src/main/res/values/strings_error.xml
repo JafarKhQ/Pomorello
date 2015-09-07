@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_empty_oauth_problem">Please Authenticate our app</string>
+    <string name="error_empty_trello_msg">Please Authenticate our app</string>
+    <string name="error_get_auth_url">Please contact our support</string>
+</resources>
