@@ -47,6 +47,8 @@ public class PomorelloUser {
     private String accessToken;
     @Expose
     private String accessSecret;
+    @Expose
+    private String lastSelectedBoardId;
 
     public boolean isAuthenticated() {
         return !TextUtils.isEmpty(accessToken);
@@ -66,6 +68,14 @@ public class PomorelloUser {
 
     public String getAccessSecret() {
         return accessSecret;
+    }
+
+    public String getLastSelectedBoardId() {
+        return lastSelectedBoardId;
+    }
+
+    public void setLastSelectedBoardId(String lastSelectedBoardId) {
+        this.lastSelectedBoardId = lastSelectedBoardId;
     }
 
     public void save(Context context) {
