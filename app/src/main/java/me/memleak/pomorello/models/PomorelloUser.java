@@ -60,6 +60,14 @@ public class PomorelloUser {
         this.accessSecret = accessSecret;
     }
 
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public String getAccessSecret() {
+        return accessSecret;
+    }
+
     public void save(Context context) {
         SharedPreferences.Editor editor = context.getApplicationContext().
                 getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit();
