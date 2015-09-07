@@ -2,10 +2,18 @@ package me.memleak.pomorello.activities;
 
 import android.content.Intent;
 
+import java.util.List;
+
 import butterknife.OnClick;
 import me.memleak.pomorello.BuildConfig;
 import me.memleak.pomorello.R;
 import me.memleak.pomorello.helpers.ToastHelper;
+import me.memleak.pomorello.models.TrelloBoard;
+import me.memleak.pomorello.rest.TrelloCallback;
+import me.memleak.pomorello.rest.TrelloClient;
+import me.memleak.pomorello.rest.apis.TrelloApi;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by jafar_qaddoumi on 9/4/15.
@@ -22,10 +30,12 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void setupViews() {
         if (mPomorelloUser.isAuthenticated()) {
-            TasksActivity.startActivity(mActivity);
-            mActivity.finish();
-        } else {
             // AuthenticateTrelloActivity.startActivity(mActivity);
+            ToastHelper.top(mContext, "load all boards");
+            TrelloApi trelloApi = TrelloClient.getTrelloApi();
+            trelloApi.getAllBoards(boardsCallback);
+        } else {
+
         }
     }
 
@@ -57,4 +67,24 @@ public class SplashActivity extends BaseActivity {
                 BuildConfig.TRELLO_API_KEY,
                 BuildConfig.TRELLO_API_SECRET);
     }
+
+    private TrelloCallback<List<TrelloBoard>> boardsCallback = new TrelloCallback<List<TrelloBoard>>() {
+
+        @Override
+        public void success(List<TrelloBoard> boardList, Response response) {
+            super.success(boardList, response);
+
+            mRealm.beginTransaction();
+            mRealm.copyToRealmOrUpdate(boardList);
+            mRealm.commitTransaction();
+
+            HomeActivity.startActivity(mActivity);
+            mActivity.finish();
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+            super.failure(error);
+        }
+    };
 }
