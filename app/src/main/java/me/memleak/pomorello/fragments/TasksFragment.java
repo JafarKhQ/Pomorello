@@ -1,28 +1,22 @@
-package me.memleak.pomorello.activities;
+package me.memleak.pomorello.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 import butterknife.Bind;
 import me.memleak.pomorello.R;
-import me.memleak.pomorello.fragments.TaskFragment;
 
 /**
- * Created by jafar_qaddoumi on 9/4/15.
+ * Created by jafar_qaddoumi on 9/7/15.
  * <p/>
  * Copyright (c) 2015 memleak.me. All rights reserved.
  */
-public class TasksActivity extends BaseActivity {
-
-    public static void startActivity(Activity activity) {
-        Intent intent = new Intent(activity, TasksActivity.class);
-        activity.startActivity(intent);
-    }
-
+public class TasksFragment extends BaseFragment {
     public static final int TAB_TODO = 0;
     public static final int TAB_DOING = 1;
     public static final int TAB_DONE = 2;
@@ -38,6 +32,17 @@ public class TasksActivity extends BaseActivity {
             R.string.tasks_tab_done
     };
 
+    private static final String EXTRA_BOARD_ID = "extra_board_id";
+
+    public static TasksFragment newInstance(String boardId) {
+        Bundle args = new Bundle();
+        args.putString(EXTRA_BOARD_ID, boardId);
+
+        TasksFragment fg = new TasksFragment();
+        fg.setArguments(args);
+        return fg;
+    }
+
     @Bind(R.id.tasks_tbl_tabs)
     TabLayout tblTabs;
     @Bind(R.id.tasks_vpg_pages)
@@ -46,16 +51,23 @@ public class TasksActivity extends BaseActivity {
     private String[] mTabNames;
 
     @Override
-    protected int getLayoutResID() {
-        return R.layout.activity_tasks;
-    }
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-    @Override
-    protected void setupViews() {
         mTabNames = new String[TAB_NAMES_RES.length];
         for (int i = 0; i < mTabNames.length; i++) {
             mTabNames[i] = getString(TAB_NAMES_RES[i]);
         }
+    }
+
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.fragment_tasks;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         vpgPages.setAdapter(new PagesAdapter());
 
@@ -85,7 +97,7 @@ public class TasksActivity extends BaseActivity {
     class PagesAdapter extends FragmentPagerAdapter {
 
         public PagesAdapter() {
-            super(mActivity.getSupportFragmentManager());
+            super(getChildFragmentManager());
         }
 
         @Override
