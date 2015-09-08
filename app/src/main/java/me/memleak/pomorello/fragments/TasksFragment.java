@@ -71,9 +71,9 @@ public class TasksFragment extends BaseFragment {
         }
 
         mTabs = new TaskFragment[TAB_NAMES_RES.length];
-        mTabs[0] = TaskFragment.newInstance(PomorelloList.TAB_TODO);
-        mTabs[1] = TaskFragment.newInstance(PomorelloList.TAB_DOING);
-        mTabs[2] = TaskFragment.newInstance(PomorelloList.TAB_DONE);
+        mTabs[0] = TaskFragment.newInstance(PomorelloList.TAB_TODO, mPomorelloList.getTodoIds());
+        mTabs[1] = TaskFragment.newInstance(PomorelloList.TAB_DOING, mPomorelloList.getDoingIds());
+        mTabs[2] = TaskFragment.newInstance(PomorelloList.TAB_DONE, mPomorelloList.getDoneIds());
     }
 
     @Override

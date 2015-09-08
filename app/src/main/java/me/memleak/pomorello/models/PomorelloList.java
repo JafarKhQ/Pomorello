@@ -69,30 +69,7 @@ public class PomorelloList extends RealmObject {
     }
 
     @Nullable
-    public static String[] getTabTaskIds(@NonNull PomorelloList pomorelloList, int type) {
-        String source;
-        switch (type) {
-            case TAB_TODO:
-                source = pomorelloList.getTodoIds();
-                break;
-
-            case TAB_DOING:
-                source = pomorelloList.getDoingIds();
-                break;
-
-            case TAB_DONE:
-                source = pomorelloList.getDoneIds();
-                break;
-
-            default:
-                throw new IllegalArgumentException("Invalid tasks type " + type);
-        }
-
-        return getTabTaskIds(source);
-    }
-
-    @Nullable
-    private static String[] getTabTaskIds(String ids) {
+    public static String[] getTabTaskIds(String ids) {
         if (TextUtils.isEmpty(ids)) {
             return null;
         }
