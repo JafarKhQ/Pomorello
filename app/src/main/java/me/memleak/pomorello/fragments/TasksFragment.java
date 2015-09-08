@@ -6,9 +6,13 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import butterknife.Bind;
+import de.greenrobot.event.EventBus;
 import me.memleak.pomorello.R;
 import me.memleak.pomorello.models.PomorelloList;
 import me.memleak.pomorello.models.TrelloBoard;
@@ -50,6 +54,7 @@ public class TasksFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         String boardId = getArguments().getString(TrelloBoard.EXTRA_BOARD_ID);
         mBoard = getRealm().where(TrelloBoard.class)
@@ -72,11 +77,6 @@ public class TasksFragment extends BaseFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     protected int getLayoutResId() {
         return R.layout.fragment_tasks;
     }
@@ -90,6 +90,29 @@ public class TasksFragment extends BaseFragment {
         tblTabs.setTabsFromPagerAdapter(vpgPages.getAdapter());
         tblTabs.setupWithViewPager(vpgPages);
         tblTabs.setOnTabSelectedListener(onTabSelectedListener);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.tasks, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.tasks_config:
+                // force change fragment
+                getRealm().beginTransaction();
+                mBoard.setIsConfigured(false);
+                getRealm().commitTransaction();
+
+                EventBus.getDefault().post(mBoard);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private TabLayout.OnTabSelectedListener onTabSelectedListener = new TabLayout.OnTabSelectedListener() {

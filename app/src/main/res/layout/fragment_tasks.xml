@@ -1,40 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/tasks_lnl_config"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tasks_tbl_tabs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        app:tabGravity="fill"
+        app:tabMode="fixed" />
 
-        <Button
-            android:id="@+id/tasks_btn_config"
-            style="@style/Button"
-            android:text="Config this project" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/tasks_lnl_pages"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/tasks_vpg_pages"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent" />
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tasks_tbl_tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tabGravity="fill"
-            app:tabMode="fixed" />
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/tasks_vpg_pages"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
-
-</FrameLayout>
+</LinearLayout>
