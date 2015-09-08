@@ -24,7 +24,6 @@
             android:name=".activities.TrelloOuthActivity"
             android:label="@string/title_trello_outh"
             android:screenOrientation="sensorPortrait" />
-        <activity android:name=".activities.AuthenticateTrelloActivity" />
         <activity android:name=".activities.HomeActivity" />
         <activity android:name=".activities.TimerActivity" />
         <!-- Activities -->
