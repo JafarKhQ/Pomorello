@@ -105,6 +105,9 @@ public class HomeActivity extends BaseActivity {
                 public boolean onNavigationItemSelected(MenuItem menuItem) {
                     final int position = menuItem.getItemId();
                     replaceFragment(mTrelloBoards.get(position));
+
+                    // close all (i know we only have one)
+                    drlDrawer.closeDrawers();
                     return true;
                 }
             };
