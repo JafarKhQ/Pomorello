@@ -17,6 +17,7 @@ import de.greenrobot.event.EventBus;
 import io.realm.Realm;
 import me.memleak.pomorello.R;
 import me.memleak.pomorello.adapters.ConfigAdapter;
+import me.memleak.pomorello.models.PomorelloList;
 import me.memleak.pomorello.models.TrelloBoard;
 import me.memleak.pomorello.models.TrelloList;
 import me.memleak.pomorello.rest.TrelloCallback;
@@ -91,12 +92,42 @@ public class ConfigFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.config_done:
+                //TODO move to methods
                 Realm realm = getRealm();
+
+                PomorelloList pomorelloList = new PomorelloList();
+                pomorelloList.setBoardId(mBoard.getId());
+                List<TrelloList> trelloList = mAdapter.getList();
+                ArrayList<String> todo = new ArrayList<>(trelloList.size());
+                ArrayList<String> doing = new ArrayList<>(trelloList.size());
+                ArrayList<String> done = new ArrayList<>(trelloList.size());
+                for (int i = 0; i < trelloList.size(); i++) {
+                    TrelloList list = trelloList.get(i);
+                    switch (list.getType()) {
+                        case PomorelloList.TAB_TODO:
+                            todo.add(list.getId());
+                            break;
+
+                        case PomorelloList.TAB_DOING:
+                            doing.add(list.getId());
+                            break;
+
+                        case PomorelloList.TAB_DONE:
+                            done.add(list.getId());
+                            break;
+
+                    }
+                }
+
+                pomorelloList.setTodoIds(PomorelloList.getTaskIdsString(todo));
+                pomorelloList.setDoingIds(PomorelloList.getTaskIdsString(doing));
+                pomorelloList.setDoneIds(PomorelloList.getTaskIdsString(done));
 
                 realm.beginTransaction();
                 mBoard.setIsConfigured(true);
                 realm.clear(TrelloList.class);
-                realm.copyToRealm(mAdapter.getList());
+                realm.copyToRealm(trelloList);
+                realm.copyToRealmOrUpdate(pomorelloList);
                 realm.commitTransaction();
 
                 EventBus.getDefault().post(mBoard);

@@ -22,6 +22,8 @@ public class TrelloList extends RealmObject {
     @SerializedName("name")
     private String name;
 
+    private int type;
+
     public String getName() {
         return name;
     }
@@ -36,5 +38,13 @@ public class TrelloList extends RealmObject {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

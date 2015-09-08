@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import java.util.ArrayList;
+
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
@@ -99,15 +101,15 @@ public class PomorelloList extends RealmObject {
     }
 
     @Nullable
-    public static String getTabTaskIds(String[] ids, int type) {
-        if (null == ids || ids.length < 1) {
+    public static String getTaskIdsString(ArrayList<String> ids) {
+        if (null == ids || ids.size() < 1) {
             return null;
         }
 
         // id length + 1 for separator(25), plus one extra
-        StringBuilder stringBuilder = new StringBuilder((ids.length + 1) * LENGTH_ID_WITH_SEPARATOR);
-        for (int i = 0; i < ids.length; i++) {
-            stringBuilder.append(ids[i]);
+        StringBuilder stringBuilder = new StringBuilder((ids.size() + 1) * LENGTH_ID_WITH_SEPARATOR);
+        for (int i = 0; i < ids.size(); i++) {
+            stringBuilder.append(ids.get(i));
             stringBuilder.append(SEPARATOR_IDS);
         }
 
