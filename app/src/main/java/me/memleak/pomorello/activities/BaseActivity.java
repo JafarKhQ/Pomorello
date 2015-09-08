@@ -24,7 +24,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected final String TAG = ((Object) this).getClass().getSimpleName();
     private static final int MENU_RES_NONE = -1;
 
-    protected Realm mRealm;
+    private Realm mRealm;
+
     protected Context mContext;
     protected ActionBar mActionBar;
     protected BaseActivity mActivity;
@@ -89,6 +90,10 @@ public abstract class BaseActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public Realm getRealm() {
+        return mRealm;
     }
 
     public void setupActionBar(boolean showUp, int resId) {

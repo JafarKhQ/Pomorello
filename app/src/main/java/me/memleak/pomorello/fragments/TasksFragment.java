@@ -10,6 +10,8 @@ import android.view.View;
 
 import butterknife.Bind;
 import me.memleak.pomorello.R;
+import me.memleak.pomorello.models.PomorelloList;
+import me.memleak.pomorello.models.TrelloBoard;
 
 /**
  * Created by jafar_qaddoumi on 9/7/15.
@@ -17,26 +19,17 @@ import me.memleak.pomorello.R;
  * Copyright (c) 2015 memleak.me. All rights reserved.
  */
 public class TasksFragment extends BaseFragment {
-    public static final int TAB_TODO = 0;
-    public static final int TAB_DOING = 1;
-    public static final int TAB_DONE = 2;
 
-    private static final TaskFragment[] TAB_FRAGMENTS = {
-            TaskFragment.newInstance(TAB_TODO),
-            TaskFragment.newInstance(TAB_DOING),
-            TaskFragment.newInstance(TAB_DONE)
-    };
+
     private static final int[] TAB_NAMES_RES = {
             R.string.tasks_tab_todo,
             R.string.tasks_tab_doing,
             R.string.tasks_tab_done
     };
 
-    private static final String EXTRA_BOARD_ID = "extra_board_id";
-
     public static TasksFragment newInstance(String boardId) {
         Bundle args = new Bundle();
-        args.putString(EXTRA_BOARD_ID, boardId);
+        args.putString(TrelloBoard.EXTRA_BOARD_ID, boardId);
 
         TasksFragment fg = new TasksFragment();
         fg.setArguments(args);
@@ -48,16 +41,39 @@ public class TasksFragment extends BaseFragment {
     @Bind(R.id.tasks_vpg_pages)
     ViewPager vpgPages;
 
+    private TrelloBoard mBoard;
+    private PomorelloList mPomorelloList;
+
     private String[] mTabNames;
+    private TaskFragment[] mTabs;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        String boardId = getArguments().getString(TrelloBoard.EXTRA_BOARD_ID);
+        mBoard = getRealm().where(TrelloBoard.class)
+                .equalTo("id", boardId)
+                .findFirst();
+
+        mPomorelloList = getRealm().where(PomorelloList.class)
+                .equalTo("boardId", mBoard.getId())
+                .findFirst();
+
         mTabNames = new String[TAB_NAMES_RES.length];
         for (int i = 0; i < mTabNames.length; i++) {
             mTabNames[i] = getString(TAB_NAMES_RES[i]);
         }
+
+        mTabs = new TaskFragment[TAB_NAMES_RES.length];
+        mTabs[0] = TaskFragment.newInstance(PomorelloList.TAB_TODO);
+        mTabs[1] = TaskFragment.newInstance(PomorelloList.TAB_DOING);
+        mTabs[2] = TaskFragment.newInstance(PomorelloList.TAB_DONE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -102,12 +118,16 @@ public class TasksFragment extends BaseFragment {
 
         @Override
         public Fragment getItem(int position) {
-            return TAB_FRAGMENTS[position];
+            return mTabs[position];
         }
 
         @Override
         public int getCount() {
-            return TAB_FRAGMENTS.length;
+            if (null == mTabs) {
+                return 0;
+            }
+
+            return mTabs.length;
         }
 
         @Override

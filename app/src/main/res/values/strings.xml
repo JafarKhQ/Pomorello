@@ -13,6 +13,8 @@
 
     <!-- Outh -->
     <string name="title_trello_outh">Trello</string>
+    <string name="config_project">Config project</string>
+    <string name="done">Done</string>
     <!-- Outh -->
 
 </resources>

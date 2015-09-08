@@ -9,8 +9,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import butterknife.Bind;
+import de.greenrobot.event.EventBus;
 import io.realm.RealmResults;
 import me.memleak.pomorello.R;
+import me.memleak.pomorello.fragments.ConfigFragment;
 import me.memleak.pomorello.fragments.TasksFragment;
 import me.memleak.pomorello.models.TrelloBoard;
 
@@ -31,42 +33,79 @@ public class HomeActivity extends BaseActivity {
     @Bind(R.id.home_nvg_boards)
     NavigationView nvgBoards;
 
+    private RealmResults<TrelloBoard> mTrelloBoards;
+
     @Override
     protected int getLayoutResID() {
         return R.layout.activity_home;
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
     protected void setupViews() {
+        mTrelloBoards = getRealm().allObjects(TrelloBoard.class);
+
         final Menu menu = nvgBoards.getMenu();
-        final String lastBoeardId = mPomorelloUser.getLastSelectedBoardId();
-        RealmResults<TrelloBoard> trelloBoards = mRealm.allObjects(TrelloBoard.class);
-        for (int i = 0; i < trelloBoards.size(); i++) {
-            TrelloBoard board = trelloBoards.get(i);
-            MenuItem item = menu.add(board.getName());
+        final String lastBoardId = mPomorelloUser.getLastSelectedBoardId();
+
+        int selectedBoardPos = -1;
+        for (int i = 0; i < mTrelloBoards.size(); i++) {
+            TrelloBoard board = mTrelloBoards.get(i);
+            MenuItem item = menu.add(0, i, i, board.getName());
             item.setCheckable(true);
 
-            if (TextUtils.isEmpty(lastBoeardId) && 0 == i) {
-                //set the firest item as selected
+            if (0 == i && TextUtils.isEmpty(lastBoardId)) {
+                //set the first item as selected
+                selectedBoardPos = i;
                 item.setChecked(true);
-            } else if (board.getId().equals(lastBoeardId)) {
+            } else if (board.getId().equals(lastBoardId)) {
+                selectedBoardPos = i;
                 item.setChecked(true);
             }
         }
 
-        getSupportFragmentManager().beginTransaction().add(R.id.home_frl_content,
-                TasksFragment.newInstance("aaa")).commit();
+        if (-1 != selectedBoardPos) {
+            replaceFragment(mTrelloBoards.get(selectedBoardPos));
+        }
 
         nvgBoards.setNavigationItemSelectedListener(onNavigationItemSelectedListener);
     }
 
+    @Override
+    protected void onPause() {
+        EventBus.getDefault().unregister(this);
+
+        super.onPause();
+    }
+
+    public void onEvent(TrelloBoard board) {
+        replaceFragment(board);
+    }
+
+    private void replaceFragment(TrelloBoard selectedBoard) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.home_frl_content,
+                        selectedBoard.isConfigured() ?
+                                TasksFragment.newInstance(selectedBoard.getId()) :
+                                ConfigFragment.newInstance(selectedBoard.getId()))
+                .addToBackStack(null)
+                .commit();
+    }
 
     private NavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener =
             new NavigationView.OnNavigationItemSelectedListener() {
 
                 @Override
                 public boolean onNavigationItemSelected(MenuItem menuItem) {
-                    return false;
+                    final int position = menuItem.getItemId();
+                    replaceFragment(mTrelloBoards.get(position));
+                    return true;
                 }
             };
 }

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
+import io.realm.Realm;
 import me.memleak.pomorello.activities.BaseActivity;
 
 /**
@@ -60,5 +61,9 @@ public abstract class BaseFragment extends Fragment {
 
     protected void setupActionBar(boolean showUp) {
         //mParentActivity.setupActionBar(showUp);
+    }
+
+    protected Realm getRealm() {
+        return mParentActivity.getRealm();
     }
 }

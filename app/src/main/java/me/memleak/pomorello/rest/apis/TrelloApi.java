@@ -1,6 +1,6 @@
 package me.memleak.pomorello.rest.apis;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import me.memleak.pomorello.models.TrelloBoard;
 import me.memleak.pomorello.models.TrelloList;
@@ -36,13 +36,13 @@ public interface TrelloApi {
 
     @GET("/members/me/boards?fields=id,name")
     void getAllBoards(
-            TrelloCallback<List<TrelloBoard>> callback
+            TrelloCallback<ArrayList<TrelloBoard>> callback
     );
 
     @GET("/boards/{boardId}/lists?fields=id,name")
     void getAllLists(
             @Path("boardId") String boardId,
-            TrelloCallback<List<TrelloList>> callback
+            TrelloCallback<ArrayList<TrelloList>> callback
     );
 
     @PUT("/cards/{cardId}")

@@ -2,9 +2,11 @@ package me.memleak.pomorello.activities;
 
 import android.content.Intent;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import butterknife.OnClick;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import me.memleak.pomorello.BuildConfig;
 import me.memleak.pomorello.R;
 import me.memleak.pomorello.helpers.ToastHelper;
@@ -68,15 +70,36 @@ public class SplashActivity extends BaseActivity {
                 BuildConfig.TRELLO_API_SECRET);
     }
 
-    private TrelloCallback<List<TrelloBoard>> boardsCallback = new TrelloCallback<List<TrelloBoard>>() {
+    private TrelloCallback<ArrayList<TrelloBoard>> boardsCallback = new TrelloCallback<ArrayList<TrelloBoard>>() {
 
         @Override
-        public void success(List<TrelloBoard> boardList, Response response) {
+        public void success(ArrayList<TrelloBoard> boardList, Response response) {
             super.success(boardList, response);
 
-            mRealm.beginTransaction();
-            mRealm.copyToRealmOrUpdate(boardList);
-            mRealm.commitTransaction();
+            final Realm realm = getRealm();
+            RealmResults<TrelloBoard> oldBoards = realm.allObjects(TrelloBoard.class);
+
+            if (null != oldBoards && oldBoards.size() > 0) {
+                // we have an old boards
+                // set Configured flag to Configured boards
+                for (int i = 0; i < boardList.size(); i++) {
+                    TrelloBoard board = boardList.get(i);
+                    for (int k = 0; k < oldBoards.size(); k++) {
+                        TrelloBoard oldBoard = oldBoards.get(k);
+                        if (board.getId().equals(oldBoard.getId())) {
+                            board.setIsConfigured(oldBoard.isConfigured());
+                        }
+                    }
+                }
+            }
+
+            realm.beginTransaction();
+            // delete all old boards
+            realm.clear(TrelloBoard.class);
+
+            // save new Configured boards
+            realm.copyToRealm(boardList);
+            realm.commitTransaction();
 
             HomeActivity.startActivity(mActivity);
             mActivity.finish();
