@@ -22,6 +22,10 @@ public class TrelloCard extends RealmObject {
     @SerializedName("name")
     private String name;
 
+    private int type;
+    private int pomodorCount;
+    private int lastWorkTime;
+
     public String getId() {
         return id;
     }
@@ -36,5 +40,29 @@ public class TrelloCard extends RealmObject {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public int getPomodorCount() {
+        return pomodorCount;
+    }
+
+    public void setPomodorCount(int pomodorCount) {
+        this.pomodorCount = pomodorCount;
+    }
+
+    public int getLastWorkTime() {
+        return lastWorkTime;
+    }
+
+    public void setLastWorkTime(int lastWorkTime) {
+        this.lastWorkTime = lastWorkTime;
     }
 }

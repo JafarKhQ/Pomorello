@@ -31,7 +31,7 @@ public class PomorelloApp extends Application {
         super.onCreate();
 
         // by design(Java) this not a correct way to deal with static
-        Realm.deleteRealmFile(this);
+        //Realm.deleteRealmFile(this);
         sRealm = Realm.getInstance(this);
         sPomorelloUser = PomorelloUser.getInstance(this);
     }

@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import io.realm.RealmQuery;
@@ -17,6 +19,7 @@ import me.memleak.pomorello.models.PomorelloList;
 import me.memleak.pomorello.models.TrelloCard;
 import me.memleak.pomorello.rest.TrelloCallback;
 import me.memleak.pomorello.rest.TrelloClient;
+import me.memleak.pomorello.widgets.DividerItemDecoration;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -43,9 +46,10 @@ public class TaskFragment extends BaseFragment {
     RecyclerView rcvList;
 
     private int mTabType;
-    private String[] mTabIds;
 
     private TaskAdapter mAdapter;
+    private RealmResults<TrelloCard> mTasksLocal;
+    private final List<TrelloCard> mTasksOnline = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,20 +57,28 @@ public class TaskFragment extends BaseFragment {
 
         mAdapter = new TaskAdapter(mParentActivity);
         mTabType = getArguments().getInt(EXTRA_TAB_TYPE);
-        mTabIds = PomorelloList.getTabTaskIds(getArguments().getString(EXTRA_TAB_IDS));
-
-        RealmQuery<TrelloCard> realmQuery = getRealm().where(TrelloCard.class);
-        for (int i = 0; null != mTabIds && i < mTabIds.length; i++) {
-            realmQuery.equalTo("id", mTabIds[i]);
-            if (i < mTabIds.length - 1) {
-                realmQuery.or();
-            }
-
-            TrelloClient.getTrelloApi().getCards(mTabIds[i], new CallBack(i == mTabIds.length - 1));
+        final String[] tabIds = PomorelloList.getTabTaskIds(getArguments().getString(EXTRA_TAB_IDS));
+        if (null == tabIds || tabIds.length < 1) {
+            // no list for this tab, no tasks
+            return;
         }
 
-        RealmResults<TrelloCard> tasks = realmQuery.findAll();
-        mAdapter.setLists(tasks);
+        RealmQuery<TrelloCard> realmQuery = getRealm().where(TrelloCard.class)
+                .equalTo("type", mTabType)
+                .beginGroup();
+        for (int i = 0; i < tabIds.length; i++) {
+            realmQuery.equalTo("id", tabIds[i]);
+            if (i < tabIds.length - 1) {
+                realmQuery.or();
+            } else {
+                realmQuery.endGroup();
+            }
+
+            TrelloClient.getTrelloApi().getCards(tabIds[i], new CallBack(i == tabIds.length - 1));
+        }
+
+        mTasksLocal = realmQuery.findAll();
+        mAdapter.setLists(mTasksLocal);
     }
 
     @Override
@@ -78,8 +90,9 @@ public class TaskFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        rcvList.setHasFixedSize(true);
+        rcvList.setHasFixedSize(false);
         rcvList.setLayoutManager(new LinearLayoutManager(mParentActivity));
+        rcvList.addItemDecoration(new DividerItemDecoration(mParentActivity, DividerItemDecoration.VERTICAL_LIST));
 
         rcvList.setAdapter(mAdapter);
     }
@@ -96,7 +109,37 @@ public class TaskFragment extends BaseFragment {
         public void success(ArrayList<TrelloCard> result, Response response) {
             super.success(result, response);
 
-            mAdapter.addLists(result);
+            synchronized (mTasksOnline) {
+                mTasksOnline.addAll(result);
+
+                //all tasks have been fetched, save them
+                if (true == isLast) {
+                    Log.d(TAG, "save tasks list to db");
+
+                    if (null != mTasksLocal) {
+                        // copy old info to new tasks
+                        for (int i = 0; i < mTasksOnline.size(); i++) {
+                            TrelloCard online = mTasksOnline.get(i);
+                            for (int k = 0; k < mTasksLocal.size(); k++) {
+                                TrelloCard local = mTasksLocal.get(k);
+                                online.setPomodorCount(local.getPomodorCount());
+                                online.setLastWorkTime(local.getLastWorkTime());
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < mTasksOnline.size(); i++) {
+                        // set the type of tasks
+                        mTasksOnline.get(i).setType(mTabType);
+                    }
+
+                    mAdapter.setLists(mTasksOnline);
+
+                    getRealm().beginTransaction();
+                    getRealm().copyToRealmOrUpdate(mTasksOnline);
+                    getRealm().commitTransaction();
+                }
+            }
         }
 
         @Override

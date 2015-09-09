@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -49,21 +48,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         return mLists.size();
     }
 
-    public List<TrelloCard> getLists() {
-        return mLists;
-    }
-
     public void setLists(List<TrelloCard> lists) {
-        mLists = new ArrayList<>(lists);
-    }
-
-    public void addLists(List<TrelloCard> lists) {
-        if (null == mLists) {
-            mLists = new ArrayList<>(lists);
-        } else {
-            mLists.addAll(lists);
-        }
-
+        mLists = lists;
         notifyDataSetChanged();
     }
 

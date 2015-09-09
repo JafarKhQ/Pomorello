@@ -30,7 +30,7 @@ public class TrelloClient implements BaseApi {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(URL_BASE)
                 .setRequestInterceptor(new TrelloRequestInterceptor())
-                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLogLevel(RestAdapter.LogLevel.NONE)
                 .setConverter(mGsonConverter)
                 .build();
 
