@@ -31,11 +31,11 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void setupViews() {
         if (mPomorelloUser.isAuthenticated()) {
-            // AuthenticateTrelloActivity.startActivity(mActivity);
-            ToastHelper.top(mContext, "load all boards");
+            ToastHelper.top(mContext, getString(R.string.updating_data));
             TrelloApi trelloApi = TrelloClient.getTrelloApi();
             trelloApi.getAllBoards(boardsCallback);
         } else {
+            ToastHelper.center(mContext, getString(R.string.please_singin));
             TrelloOuthActivity.startActivityForResult(mActivity,
                     BuildConfig.TRELLO_API_KEY,
                     BuildConfig.TRELLO_API_SECRET);
