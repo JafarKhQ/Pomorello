@@ -10,7 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabGravity="fill"
+        app:tabIndicatorColor="?colorAccent"
+        app:tabIndicatorHeight="1.6dp"
         app:tabMode="fixed" />
+
+    <View
+        style="@style/View"
+        android:background="?colorAccent" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/tasks_vpg_pages"
