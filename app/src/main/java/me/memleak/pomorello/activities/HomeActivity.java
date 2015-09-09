@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -49,6 +50,10 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     protected void setupViews() {
+        // not correct i know
+        mActionBar.setHomeButtonEnabled(true);
+        mActionBar.setDisplayHomeAsUpEnabled(true);
+
         mTrelloBoards = getRealm().allObjects(TrelloBoard.class);
 
         final Menu menu = nvgBoards.getMenu();
@@ -75,6 +80,22 @@ public class HomeActivity extends BaseActivity {
         }
 
         nvgBoards.setNavigationItemSelectedListener(onNavigationItemSelectedListener);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (drlDrawer.isDrawerOpen(Gravity.LEFT)) {
+                    drlDrawer.closeDrawer(Gravity.LEFT);
+                } else {
+                    drlDrawer.openDrawer(Gravity.LEFT);
+                }
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -107,7 +128,7 @@ public class HomeActivity extends BaseActivity {
                     replaceFragment(mTrelloBoards.get(position));
 
                     // close all (i know we only have one)
-                    drlDrawer.closeDrawers();
+                    drlDrawer.closeDrawer(Gravity.LEFT);
                     return true;
                 }
             };

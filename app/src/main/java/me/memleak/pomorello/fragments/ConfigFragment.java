@@ -23,6 +23,7 @@ import me.memleak.pomorello.models.TrelloList;
 import me.memleak.pomorello.rest.TrelloCallback;
 import me.memleak.pomorello.rest.TrelloClient;
 import me.memleak.pomorello.rest.apis.TrelloApi;
+import me.memleak.pomorello.widgets.DividerItemDecoration;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -76,8 +77,9 @@ public class ConfigFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        rcvList.setHasFixedSize(true);
+        rcvList.setHasFixedSize(false);
         rcvList.setLayoutManager(new LinearLayoutManager(mParentActivity));
+        rcvList.addItemDecoration(new DividerItemDecoration(mParentActivity, DividerItemDecoration.VERTICAL_LIST));
 
         rcvList.setAdapter(mAdapter);
     }
