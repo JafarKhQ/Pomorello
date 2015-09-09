@@ -115,7 +115,6 @@ public class HomeActivity extends BaseActivity {
                         selectedBoard.isConfigured() ?
                                 TasksFragment.newInstance(selectedBoard.getId()) :
                                 ConfigFragment.newInstance(selectedBoard.getId()))
-                .addToBackStack(null)
                 .commit();
     }
 
