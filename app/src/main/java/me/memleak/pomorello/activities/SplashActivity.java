@@ -4,7 +4,6 @@ import android.content.Intent;
 
 import java.util.ArrayList;
 
-import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import me.memleak.pomorello.BuildConfig;
@@ -37,7 +36,9 @@ public class SplashActivity extends BaseActivity {
             TrelloApi trelloApi = TrelloClient.getTrelloApi();
             trelloApi.getAllBoards(boardsCallback);
         } else {
-
+            TrelloOuthActivity.startActivityForResult(mActivity,
+                    BuildConfig.TRELLO_API_KEY,
+                    BuildConfig.TRELLO_API_SECRET);
         }
     }
 
@@ -61,13 +62,6 @@ public class SplashActivity extends BaseActivity {
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
-    }
-
-    @OnClick(R.id.splash_btn_login)
-    void clickLogin() {
-        TrelloOuthActivity.startActivityForResult(mActivity,
-                BuildConfig.TRELLO_API_KEY,
-                BuildConfig.TRELLO_API_SECRET);
     }
 
     private TrelloCallback<ArrayList<TrelloBoard>> boardsCallback = new TrelloCallback<ArrayList<TrelloBoard>>() {
